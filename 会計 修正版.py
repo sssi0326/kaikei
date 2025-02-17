@@ -1,0 +1,180 @@
+import PySimpleGUI as sg
+import datetime
+milk_price=200
+ichi_price=200
+coff_price=200
+karu_price=200
+total_price=0
+ruikei=0
+#--------------
+ruikei_milk=0
+ruikei_ichi=0
+ruikei_coff=0
+ruikei_karu=0
+ruikei_cnt=0
+milk_per=000
+ichi_per=000
+coff_per=000
+karu_per=000
+total_cnt=0
+cnt_list=[]
+per_list=[]
+syouhin=["ミルクテ","イチゴ","コーヒー","カルピス"]
+cnt=[0,0,0,0]
+flav=["milk","ichi","coff","karu"]
+max_syouhin=""
+min_syouhin=""
+#--------------
+milk=0
+ichi=0
+coff=0
+karu=0
+#-------------------------------
+size=(5,1)
+size2=(8,1)
+graph=(50,1)
+color=("black","white")
+#---------------------------------
+
+layout=[
+    [sg.Text("ミルクテ",),sg.Text(f"単価：{milk_price}"),sg.Button("リセット",size=size2,button_color=color,key="milk_cnt_reset_0"),sg.Button("1個",size=size,button_color=color,key="milk_cnt_1"),sg.Button("2個",size=size,button_color=color,key="milk_cnt_2"),sg.Button("3個",size=size,button_color=color,key="milk_cnt_3"),sg.Button("4個",size=size,button_color=color,key="milk_cnt_4"),sg.Button("5個",size=size,button_color=color,key="milk_cnt_5"),sg.InputText(key="milk_cnt",size=(5,1),default_text=0),sg.Text("個")],
+    [sg.Text("イチゴ　",),sg.Text(f"単価：{ichi_price}"),sg.Button("リセット",size=size2,button_color=color,key="ichi_cnt_reset_0"),sg.Button("1個",size=size,button_color=color,key="ichi_cnt_1"),sg.Button("2個",size=size,button_color=color,key="ichi_cnt_2"),sg.Button("3個",size=size,button_color=color,key="ichi_cnt_3"),sg.Button("4個",size=size,button_color=color,key="ichi_cnt_4"),sg.Button("5個",size=size,button_color=color,key="ichi_cnt_5"),sg.InputText(key="ichi_cnt",size=(5,1),default_text=0),sg.Text("個")],
+    [sg.Text("コーヒー",),sg.Text(f"単価：{coff_price}"),sg.Button("リセット",size=size2,button_color=color,key="coff_cnt_reset_0"),sg.Button("1個",size=size,button_color=color,key="coff_cnt_1"),sg.Button("2個",size=size,button_color=color,key="coff_cnt_2"),sg.Button("3個",size=size,button_color=color,key="coff_cnt_3"),sg.Button("4個",size=size,button_color=color,key="coff_cnt_4"),sg.Button("5個",size=size,button_color=color,key="coff_cnt_5"),sg.InputText(key="coff_cnt",size=(5,1),default_text=0),sg.Text("個")],
+    [sg.Text("カルピス",),sg.Text(f"単価：{karu_price}"),sg.Button("リセット",size=size2,button_color=color,key="karu_cnt_reset_0"),sg.Button("1個",size=size,button_color=color,key="karu_cnt_1"),sg.Button("2個",size=size,button_color=color,key="karu_cnt_2"),sg.Button("3個",size=size,button_color=color,key="karu_cnt_3"),sg.Button("4個",size=size,button_color=color,key="karu_cnt_4"),sg.Button("5個",size=size,button_color=color,key="karu_cnt_5"),sg.InputText(key="karu_cnt",size=(5,1),default_text=0),sg.Text("個")],
+    [sg.InputText(total_price,key="total",size=size2),sg.Text("円"),sg.Button("会計",key="kaikei",size=(8,2))],
+    [sg.Text("累計売上金額"),sg.Text(ruikei,key="ruikei"),sg.Text("円")],
+    [sg.Text("累計売上個数"),sg.Text("ミルクテ"),sg.Text(ruikei_milk,key="ruimilk"),sg.Text("個"),sg.Text("イチゴ"),sg.Text(ruikei_ichi,key="ruiichi"),sg.Text("個"),sg.Text("コーヒー"),sg.Text(ruikei_coff,key="ruicoff"),sg.Text("個"),sg.Text("カルピス"),sg.Text(ruikei_karu,key="ruikaru"),sg.Text("個"),sg.Text("合計"),sg.Text(ruikei_cnt,key="ruikeicnt"),sg.Text("個")],
+    [sg.Text("売上割合　　")],
+    [sg.Text("ミルクテ"),sg.Text(milk_per,key="permilk"),sg.Text("%"),sg.InputText(key="graph_milk",size=graph)],
+    [sg.Text("イチゴ　"),sg.Text(milk_per,key="perichi"),sg.Text("%"),sg.InputText(key="graph_ichi",size=graph)],
+    [sg.Text("コーヒー"),sg.Text(milk_per,key="percoff"),sg.Text("%"),sg.InputText(key="graph_coff",size=graph)],
+    [sg.Text("カルピス"),sg.Text(milk_per,key="perkaru"),sg.Text("%"),sg.InputText(key="graph_karu",size=graph)],
+    [sg.Text("最大"),sg.Text("商品名"),sg.Text(key="maxsyouhin"),sg.Text(key="maxcnt"),sg.Text("個"),sg.Text(key="maxper"),sg.Text("%")],
+    [sg.Text("最小"),sg.Text("商品名"),sg.Text(key="minsyouhin"),sg.Text(key="mincnt"),sg.Text("個"),sg.Text(key="minper"),sg.Text("%")],
+    [sg.Button("会計開始",key="kaisi",size=(8,2)),sg.Button("会計終了",key="owari",size=(8,2))],
+]
+window=sg.Window("かいけいくん",layout)
+
+while True:
+    event,value=window.read()
+    if event==None:
+        break
+#-------------個数ボタン----------------------------------
+    if "cnt" in event:
+        window[event[:4]+"_cnt"].update(int(event[len(event)-1]))
+        cnt[flav.index(event[:4])]=int(event[len(event)-1])
+        window["total"].update(sum(cnt)*200)
+#--------------------------------------------------------
+    if event=="kaikei":
+        total_cnt=sum(cnt)
+        total_price=total_cnt*200
+        ruikei+=total_price
+        ruikei_cnt=total_cnt
+        window["ruikeicnt"].update(ruikei_cnt)
+        max_syouhin=""
+        min_syouhin=""
+        ruikei_milk+=cnt[0]
+        ruikei_ichi+=cnt[1]
+        ruikei_coff+=cnt[2]
+        ruikei_karu+=cnt[3]
+        window["ruimilk"].update(ruikei_milk)
+        window["ruiichi"].update(ruikei_ichi)
+        window["ruicoff"].update(ruikei_coff)
+        window["ruikaru"].update(ruikei_karu)
+        milk_per=int(ruikei_milk/total_cnt*100)
+        ichi_per=int(ruikei_ichi/total_cnt*100)
+        coff_per=int(ruikei_coff/total_cnt*100)
+        karu_per=int(ruikei_karu/total_cnt*100)
+        window["permilk"].update(f"{milk_per:03}")
+        window["perichi"].update(f"{ichi_per:03}")
+        window["percoff"].update(f"{coff_per:03}")
+        window["perkaru"].update(f"{karu_per:03}")
+        cnt_list=[ruikei_milk,ruikei_ichi,ruikei_coff,ruikei_karu]
+        per_list=[milk_per,ichi_per,coff_per,karu_per]
+        max_syouhin=cnt_list[cnt_list.index(max(cnt_list))]
+        min_syouhin=cnt_list[cnt_list.index(min(cnt_list))]
+        window["maxsyouhin"].update(max_syouhin)
+        window["maxcnt"].update(max(cnt_list))
+        window["maxper"].update(max(per_list))
+        window["minsyouhin"].update(min_syouhin)
+        window["mincnt"].update(min(cnt_list))
+        window["minper"].update(min(per_list))
+        for i in flav:
+            window["graph_"+i].update("|"*per_list[flav.index(i)])
+#------------履歴---------------------------------------------------------------------------------------------
+        text=f"\n{datetime.datetime.now()}\nミルクテ{cnt[0]}個\nイチゴ{cnt[1]}個\nコーヒー{cnt[2]}個\nカルピス{cnt[3]}個\n合計金額{total_price}円\n---------------------------"
+        print(text)
+        f=open("log.txt","a",encoding='UTF-8')
+        f.write(text)
+        f.close()
+#----------会計開始---------------------------------
+    if event=="kaisi":
+        f=open("total.txt","r",encoding="UTF-8")
+        ruikei=int(f.read())
+        window["ruikei"].update(ruikei)
+        f.close()
+        f=open("total_milk_cnt.txt","r",encoding="UTF-8")
+        ruikei_milk=int(f.read())
+        cnt[0]=ruikei_milk
+        window["ruimilk"].update(ruikei_milk)
+        f.close()
+        f=open("total_ichi_cnt.txt","r",encoding="UTF-8")
+        ruikei_ichi=int(f.read())
+        cnt[1]=ruikei_ichi
+        window["ruiichi"].update(ruikei_ichi)
+        f.close()
+        f=open("total_coff_cnt.txt","r",encoding="UTF-8")
+        ruikei_coff=int(f.read())
+        cnt[2]=ruikei_coff
+        window["ruicoff"].update(ruikei_coff)
+        f.close()
+        f=open("total_karu_cnt.txt","r",encoding="UTF-8")
+        ruikei_karu=int(f.read())
+        cnt[3]=ruikei_karu
+        window["ruikaru"].update(ruikei_karu)
+        f.close()
+        total_cnt=sum(cnt)
+        milk_per=int(ruikei_milk/total_cnt*100)
+        ichi_per=int(ruikei_ichi/total_cnt*100)
+        coff_per=int(ruikei_coff/total_cnt*100)
+        karu_per=int(ruikei_karu/total_cnt*100)
+        window["permilk"].update(milk_per)
+        window["perichi"].update(ichi_per)
+        window["percoff"].update(coff_per)
+        window["perkaru"].update(karu_per)
+        window["permilk"].update(f"{milk_per:03}")
+        window["perichi"].update(f"{ichi_per:03}")
+        window["percoff"].update(f"{coff_per:03}")
+        window["perkaru"].update(f"{karu_per:03}")
+        cnt_list=[ruikei_milk,ruikei_ichi,ruikei_coff,ruikei_karu]
+        per_list=[milk_per,ichi_per,coff_per,karu_per]
+        max_syouhin=cnt_list[cnt_list.index(max(cnt_list))]
+        min_syouhin=cnt_list[cnt_list.index(min(cnt_list))]
+        for i in flav:
+            window["graph_"+i].update("|"*per_list[flav.index(i)])
+        window["maxsyouhin"].update(max_syouhin)
+        window["maxcnt"].update(max(cnt_list))
+        window["maxper"].update(max(per_list))
+        window["minsyouhin"].update(min_syouhin)
+        window["mincnt"].update(min(cnt_list))
+        window["minper"].update(min(per_list))
+        print("会計が開始しました！")
+#----------会計終了---------------------------------
+    if event=="owari":
+        f=open("total.txt","a",encoding="UTF-8")
+        f.write(f"{ruikei}")
+        f.close()
+        f=open("total_milk_cnt.txt","a",encoding="UTF-8")
+        f.write(f"{ruikei_milk}")
+        f.close()
+        f=open("total_ichi_cnt.txt","a",encoding="UTF-8")
+        f.write(f"{ruikei_ichi}")
+        f.close()
+        f=open("total_coff_cnt.txt","a",encoding="UTF-8")
+        f.write(f"{ruikei_coff}")
+        f.close()
+        f=open("total_karu_cnt.txt","a",encoding="UTF-8")
+        f.write(f"{ruikei_karu}")
+        f.close()
+        print("会計が終了しました！")
+window.close()
