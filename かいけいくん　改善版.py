@@ -1,9 +1,5 @@
 import PySimpleGUI as sg
 import datetime
-milk_price=200
-ichi_price=200
-coff_price=200
-karu_price=200
 total_price=0
 ruikei=0
 #--------------
@@ -37,10 +33,10 @@ color=("black","white")
 #---------------------------------
 
 layout=[
-    [sg.Text("ミルクテ",),sg.Text(f"単価：{milk_price}"),sg.Button("リセット",size=size2,button_color=color,key="milk_cnt_reset_0"),sg.Button("1個",size=size,button_color=color,key="milk_cnt_1"),sg.Button("2個",size=size,button_color=color,key="milk_cnt_2"),sg.Button("3個",size=size,button_color=color,key="milk_cnt_3"),sg.Button("4個",size=size,button_color=color,key="milk_cnt_4"),sg.Button("5個",size=size,button_color=color,key="milk_cnt_5"),sg.InputText(key="milk_cnt",size=(5,1),default_text=0),sg.Text("個")],
-    [sg.Text("イチゴ　",),sg.Text(f"単価：{ichi_price}"),sg.Button("リセット",size=size2,button_color=color,key="ichi_cnt_reset_0"),sg.Button("1個",size=size,button_color=color,key="ichi_cnt_1"),sg.Button("2個",size=size,button_color=color,key="ichi_cnt_2"),sg.Button("3個",size=size,button_color=color,key="ichi_cnt_3"),sg.Button("4個",size=size,button_color=color,key="ichi_cnt_4"),sg.Button("5個",size=size,button_color=color,key="ichi_cnt_5"),sg.InputText(key="ichi_cnt",size=(5,1),default_text=0),sg.Text("個")],
-    [sg.Text("コーヒー",),sg.Text(f"単価：{coff_price}"),sg.Button("リセット",size=size2,button_color=color,key="coff_cnt_reset_0"),sg.Button("1個",size=size,button_color=color,key="coff_cnt_1"),sg.Button("2個",size=size,button_color=color,key="coff_cnt_2"),sg.Button("3個",size=size,button_color=color,key="coff_cnt_3"),sg.Button("4個",size=size,button_color=color,key="coff_cnt_4"),sg.Button("5個",size=size,button_color=color,key="coff_cnt_5"),sg.InputText(key="coff_cnt",size=(5,1),default_text=0),sg.Text("個")],
-    [sg.Text("カルピス",),sg.Text(f"単価：{karu_price}"),sg.Button("リセット",size=size2,button_color=color,key="karu_cnt_reset_0"),sg.Button("1個",size=size,button_color=color,key="karu_cnt_1"),sg.Button("2個",size=size,button_color=color,key="karu_cnt_2"),sg.Button("3個",size=size,button_color=color,key="karu_cnt_3"),sg.Button("4個",size=size,button_color=color,key="karu_cnt_4"),sg.Button("5個",size=size,button_color=color,key="karu_cnt_5"),sg.InputText(key="karu_cnt",size=(5,1),default_text=0),sg.Text("個")],
+    [sg.Text("ミルクテ",),sg.Text(f"単価：{200}"),sg.Button("リセット",size=size2,button_color=color,key="milk_cnt_reset_0"),sg.Button("1個",size=size,button_color=color,key="milk_cnt_1"),sg.Button("2個",size=size,button_color=color,key="milk_cnt_2"),sg.Button("3個",size=size,button_color=color,key="milk_cnt_3"),sg.Button("4個",size=size,button_color=color,key="milk_cnt_4"),sg.Button("5個",size=size,button_color=color,key="milk_cnt_5"),sg.InputText(key="milk_cnt",size=(5,1),default_text=0),sg.Text("個")],
+    [sg.Text("イチゴ　",),sg.Text(f"単価：{200}"),sg.Button("リセット",size=size2,button_color=color,key="ichi_cnt_reset_0"),sg.Button("1個",size=size,button_color=color,key="ichi_cnt_1"),sg.Button("2個",size=size,button_color=color,key="ichi_cnt_2"),sg.Button("3個",size=size,button_color=color,key="ichi_cnt_3"),sg.Button("4個",size=size,button_color=color,key="ichi_cnt_4"),sg.Button("5個",size=size,button_color=color,key="ichi_cnt_5"),sg.InputText(key="ichi_cnt",size=(5,1),default_text=0),sg.Text("個")],
+    [sg.Text("コーヒー",),sg.Text(f"単価：{200}"),sg.Button("リセット",size=size2,button_color=color,key="coff_cnt_reset_0"),sg.Button("1個",size=size,button_color=color,key="coff_cnt_1"),sg.Button("2個",size=size,button_color=color,key="coff_cnt_2"),sg.Button("3個",size=size,button_color=color,key="coff_cnt_3"),sg.Button("4個",size=size,button_color=color,key="coff_cnt_4"),sg.Button("5個",size=size,button_color=color,key="coff_cnt_5"),sg.InputText(key="coff_cnt",size=(5,1),default_text=0),sg.Text("個")],
+    [sg.Text("カルピス",),sg.Text(f"単価：{200}"),sg.Button("リセット",size=size2,button_color=color,key="karu_cnt_reset_0"),sg.Button("1個",size=size,button_color=color,key="karu_cnt_1"),sg.Button("2個",size=size,button_color=color,key="karu_cnt_2"),sg.Button("3個",size=size,button_color=color,key="karu_cnt_3"),sg.Button("4個",size=size,button_color=color,key="karu_cnt_4"),sg.Button("5個",size=size,button_color=color,key="karu_cnt_5"),sg.InputText(key="karu_cnt",size=(5,1),default_text=0),sg.Text("個")],
     [sg.InputText(total_price,key="total",size=size2),sg.Text("円"),sg.Button("会計",key="kaikei",size=(8,2))],
     [sg.Text("累計売上金額"),sg.Text(ruikei,key="ruikei"),sg.Text("円")],
     [sg.Text("累計売上個数"),sg.Text("ミルクテ"),sg.Text(ruikei_milk,key="ruimilk"),sg.Text("個"),sg.Text("イチゴ"),sg.Text(ruikei_ichi,key="ruiichi"),sg.Text("個"),sg.Text("コーヒー"),sg.Text(ruikei_coff,key="ruicoff"),sg.Text("個"),sg.Text("カルピス"),sg.Text(ruikei_karu,key="ruikaru"),sg.Text("個"),sg.Text("合計"),sg.Text(ruikei_cnt,key="ruikeicnt"),sg.Text("個")],
